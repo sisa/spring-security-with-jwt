@@ -1,0 +1,21 @@
+spring:
+      profiles:
+          active: dev
+      h2:
+          console:
+            enabled: false
+            path: /h2_console
+          datasource:
+            url: jdbc:h2:file:~/h2/testdb
+            username: sa
+            password:
+            driverClassName: org.h2.Driver
+server:
+  context-path: /api
+jwt:
+  header: Authorization
+  secret: WEtH04rihzKDS65oauaUl/ushfzDuZAx6REEigncugo=
+  expiration: 90_000
+  authServerName: STS_Auth_Server
+
+
