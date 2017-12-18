@@ -2,7 +2,7 @@
 
    Sprin Boot API üzerinde JWT ile kimlik doğrulama ve yetkilendirme
    
-   [![Build Status](https://travis-ci.org/sisa/sts.svg?branch=master)](https://travis-ci.org/sisa) 
+   [![Build Status](https://travis-ci.org/sisa/spring-security-with-jwt.svg?branch=master)](https://travis-ci.org/sisa) 
 
 ## Gereksinimler    
 
