@@ -1,5 +1,7 @@
 # JWT ile Spring Kimlik Doğrulama/Yetkilendirme
 
+> *Copyright 2017 [isa öztürk](http://sisa.github.io)*
+
    Sprin Boot API üzerinde JWT ile kimlik doğrulama ve yetkilendirme
    
    [![Build Status](https://travis-ci.org/sisa/spring-security-with-jwt.svg?branch=master)](https://travis-ci.org/sisa) 
