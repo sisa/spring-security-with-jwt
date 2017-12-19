@@ -10,7 +10,8 @@ install:
   - pip install --user codecov
 
 script:
-- mvn clean package -DskipTests=false
+  - mvn clean package -DskipTests=false
+  - mvn cobertura:cobertura
 
 # public repo on Travis CI
 after_success:
