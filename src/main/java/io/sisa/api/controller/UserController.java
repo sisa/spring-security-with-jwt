@@ -1,4 +1,4 @@
-package io.sisa.controller;
+package io.sisa.api.controller;
 
 import io.sisa.core.model.domain.AppUser;
 import io.sisa.core.security.JwtTokenHelper;
