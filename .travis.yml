@@ -1,18 +1,16 @@
 language: java
+jdk: oraclejdk8
+sudo: false
 
-jdk:
-- oraclejdk8
-
-os:
-- linux
-
-before_install:
-    - pip install --user codecov    #Install codecov
+notifications:
+    email:
+        - isaozturk@gmail.com
 
 install: true
 
 script:
 - mvn clean package -DskipTests=false
 
+# public repo on Travis CI
 after_success:
   - bash <(curl -s https://codecov.io/bash)
