@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,8 +20,8 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,6 +84,21 @@ public class CityControllerTest {
         City[] cities  = objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), City[].class);
         assertThat(cities).isNotNull();
         Arrays.stream(cities).forEach(System.out::println);
+
+    }
+
+    @Test
+    public void citiesByIdTest() throws Exception {
+
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/cities/1")
+                        .header("Authorization","Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.FORBIDDEN.value());
 
     }
 }
