@@ -6,7 +6,8 @@ notifications:
     email:
         - isaozturk@gmail.com
 
-install: true
+install:
+  - pip install --user codecov
 
 script:
 - mvn clean package -DskipTests=false
