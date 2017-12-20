@@ -15,7 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,19 +32,22 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	private final UserDetailsService userDetailsService;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
 	@Autowired
-	public WebSecurity(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+	public WebSecurity(UserDetailsService userDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
 		this.userDetailsService = userDetailsService;
-		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
 	}
 
 	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
 	public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-		return new AuthenticationTokenFilter(authenticationManager());
+		return new AuthenticationTokenFilter();
 	}
 
 	@Override
@@ -59,13 +63,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.antMatchers("/cities").hasRole("STANDARD")
 				.anyRequest().authenticated()
 				.and()
-				.addFilterBefore(authenticationTokenFilterBean(), BasicAuthenticationFilter.class);
+				.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
 	}
 
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
 
 	@Bean

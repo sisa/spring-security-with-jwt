@@ -3,13 +3,12 @@ package io.sisa.core.security;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.sisa.core.security.conf.JwtProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,16 +20,13 @@ import java.io.IOException;
  * @author isaozturk
  */
 
-public class AuthenticationTokenFilter extends BasicAuthenticationFilter {
+public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JwtTokenHelper jwtTokenHelper;
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	public AuthenticationTokenFilter(AuthenticationManager authManager) {
-		super(authManager);
-	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,
@@ -58,14 +54,12 @@ public class AuthenticationTokenFilter extends BasicAuthenticationFilter {
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
 			if (jwtTokenHelper.validateToken(authToken, userDetails)) {
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
 						null,
 						userDetails.getAuthorities());
 
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				logger.info("authenticated user " + username + ", setting security context");
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 		}

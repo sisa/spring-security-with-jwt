@@ -36,7 +36,7 @@ public class UserController {
 	public ResponseEntity<String> login(@RequestBody AppUser user , Device device) {
 
 		UserDetails userDetails=  userDetailsService.loadUserByUsername(user.getUsername());
-		if (userDetails.getPassword().equalsIgnoreCase(user.getPassword())){
+		if (userDetails.getPassword().equals(user.getPassword())){
 			String jwt= jwtTokenHelper.generateToken(userDetails, device);
 			return new ResponseEntity<>(jwt, HttpStatus.OK);
 		}
