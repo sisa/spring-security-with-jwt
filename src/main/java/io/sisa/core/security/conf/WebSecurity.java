@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -33,16 +32,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	private final UserDetailsService userDetailsService;
 	private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+	private final BCryptPasswordEncoder cryptPasswordEncoder;
 
 	@Autowired
-	public WebSecurity(UserDetailsService userDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+	public WebSecurity(UserDetailsService userDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint, BCryptPasswordEncoder cryptPasswordEncoder) {
 		this.userDetailsService = userDetailsService;
 		this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		this.cryptPasswordEncoder = cryptPasswordEncoder;
 	}
 
 	@Bean
@@ -69,7 +65,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		auth.userDetailsService(userDetailsService).passwordEncoder(cryptPasswordEncoder);
 	}
 
 	@Bean

@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,15 +28,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final ApplicationUserRepository applicationUserRepository;
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder cryptPasswordEncoder;
 
 
     public UserDetailsServiceImpl(ApplicationUserRepository applicationUserRepository,
-                                  UserRoleRepository userRoleRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+                                  UserRoleRepository userRoleRepository, RoleRepository roleRepository, BCryptPasswordEncoder cryptPasswordEncoder) {
         this.applicationUserRepository = applicationUserRepository;
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.cryptPasswordEncoder = cryptPasswordEncoder;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Transactional
     public void save(AppUser user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(cryptPasswordEncoder.encode(user.getPassword()));
         applicationUserRepository.save(user);
     }
 }
