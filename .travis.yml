@@ -1,3 +1,6 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=d3a5392c036ac2c220667879ea20dfdea4999fb9c1c3fe7d9b1d39a4158f4043
 language: java
 jdk: oraclejdk8
 sudo: false
@@ -9,10 +12,19 @@ notifications:
 install:
   - pip install --user codecov
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
   - mvn clean package -DskipTests=false
   - mvn cobertura:cobertura
+  - bundle exec rspec
 
 # public repo on Travis CI
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
