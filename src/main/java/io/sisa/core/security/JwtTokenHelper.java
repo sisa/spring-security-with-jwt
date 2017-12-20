@@ -101,7 +101,6 @@ public class JwtTokenHelper implements Serializable {
         final Date createdDate = new Date();
         final Date expirationDate = calculateExpirationDate(createdDate);
 
-        System.out.println("doGenerateToken " + createdDate);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -136,16 +135,26 @@ public class JwtTokenHelper implements Serializable {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
+
+        final String username = getUsernameFromToken(token);
+
+        return (
+                username.equals(userDetails.getUsername())
+                        && !isTokenExpired(token)
+        );
+    }
+
+   /* public Boolean validateToken(String token, UserDetails userDetails) {
         JwtUser user = (JwtUser) userDetails;
         final String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
-        //final Date expiration = getExpirationDateFromToken(token);
+
         return (
                 username.equals(userDetails.getUsername())
                         && !isTokenExpired(token)
                         && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())
         );
-    }
+    }*/
 
     private Date calculateExpirationDate(Date createdDate) {
         return new Date(createdDate.getTime() + jwtProperties.getExpiration());

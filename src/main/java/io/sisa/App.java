@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 /**
  * @author isaozturk
  */
-
 @SpringBootApplication
 public class App {
 
