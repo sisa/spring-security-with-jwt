@@ -5,6 +5,8 @@
 version: 2
 jobs:
   build:
+    environment:
+        CC_TEST_REPORTER_ID: d3a5392c036ac2c220667879ea20dfdea4999fb9c1c3fe7d9b1d39a4158f4043
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
@@ -29,6 +31,12 @@ jobs:
           - v1-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+
+      - run:
+               name: Setup Code Climate test-reporter
+               command: |
+                 curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+                 chmod +x ./cc-test-reporter
 
       - run: mvn dependency:go-offline
 
