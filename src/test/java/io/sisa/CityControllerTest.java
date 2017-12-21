@@ -55,9 +55,7 @@ public class CityControllerTest {
         MvcResult mvcResult = mockMvc.perform(
                 post("/auth/login")
                         .content(objectMapper.writeValueAsString(user))
-                        .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andDo(print())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -76,7 +74,6 @@ public class CityControllerTest {
                 get("/cities")
                         .header("Authorization","Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 

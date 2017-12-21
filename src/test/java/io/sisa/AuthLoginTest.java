@@ -18,7 +18,6 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -53,10 +52,8 @@ public class AuthLoginTest {
 		MvcResult mvcResult = mockMvc.perform(
 				post("/auth/login")
 					.content(objectMapper.writeValueAsString(user))
-					.contentType(MediaType.APPLICATION_JSON)
-				)
-				.andDo(print())
-				.andExpect(status().isOk())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
 				.andReturn();
 
 		assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
@@ -75,10 +72,8 @@ public class AuthLoginTest {
 		MvcResult mvcResult = mockMvc.perform(
 				post("/auth/login")
 						.content(objectMapper.writeValueAsString(user))
-						.contentType(MediaType.APPLICATION_JSON)
-		)
-				.andDo(print())
-				.andReturn();
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
 		assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 
