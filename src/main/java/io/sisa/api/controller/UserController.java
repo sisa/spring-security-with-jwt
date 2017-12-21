@@ -40,7 +40,9 @@ public class UserController {
 			String jwt= jwtTokenHelper.generateToken(userDetails, device);
 			return new ResponseEntity<>(jwt, HttpStatus.OK);
 		}
-		return new ResponseEntity<>("", HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+
+		return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
 
 	}
+
 }

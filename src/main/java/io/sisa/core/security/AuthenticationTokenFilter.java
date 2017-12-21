@@ -27,7 +27,6 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,
 									HttpServletResponse response,
@@ -55,8 +54,9 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 			if (jwtTokenHelper.validateToken(authToken, userDetails)) {
+
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
-						null,
+						userDetails.getPassword(),
 						userDetails.getAuthorities());
 
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
