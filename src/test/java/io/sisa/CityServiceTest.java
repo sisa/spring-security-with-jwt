@@ -25,14 +25,24 @@ public class CityServiceTest {
     @Test
     public void fetchAllCitiesTest() {
 
-        List<City> cities = cityService.fetchAllCities();
+        final List<City> cities = cityService.fetchAllCities();
         assertThat(cities).isNotNull();
     }
 
     @Test
-    public void findCityyByIdTest() {
+    public void findCityByIdTest() {
 
-        City city = cityService.findById(1L);
+        final City city = cityService.findById(1L);
         assertThat(city).isNotNull();
+    }
+
+
+    @Test
+    public void saveCityTest() {
+
+        final City city = new City();
+        city.setName("Bartin");
+        cityService.save(city);
+        assertThat(city.getId()).isNotNull();
     }
 }
