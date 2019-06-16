@@ -1,12 +1,12 @@
-package io.sisa.api.controller;
+package io.sisa.api.v1.controller;
 
 import io.sisa.core.model.domain.City;
 import io.sisa.core.model.service.CityService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,23 +16,20 @@ import java.util.List;
  */
 
 @RestController
+@AllArgsConstructor
+@RequestMapping("/api/v1")
 public class CityController {
 
     private final CityService cityService;
 
-    @Autowired
-    public CityController(CityService cityService) {
-        this.cityService = cityService;
-    }
-
-    @RequestMapping(value ="/cities", method = RequestMethod.GET)
+    @GetMapping(value = "/cities")
     @PreAuthorize("hasRole('ROLE_STANDARD')")
     public List<City> getCity(){
         return cityService.fetchAllCities();
     }
 
 
-    @RequestMapping(value ="/cities/{cityId}", method = RequestMethod.GET)
+    @GetMapping(value = "/cities/{cityId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public City getCity(@PathVariable("cityId") Long cityId){
         return cityService.findById(cityId);

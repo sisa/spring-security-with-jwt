@@ -11,5 +11,8 @@ import java.util.List;
 public interface CityService{
 
     List<City> fetchAllCities();
+
     City findById(Long id);
+
+    void save(City city);
 }

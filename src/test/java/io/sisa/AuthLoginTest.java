@@ -16,9 +16,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 /**
  * @author isaozturk
@@ -38,7 +37,6 @@ public class AuthLoginTest {
 	public void setup() throws Exception {
 		this.mockMvc = MockMvcBuilders
 				.webAppContextSetup(webApplicationContext)
-				.apply(springSecurity())
 				.build();
 	}
 
@@ -51,9 +49,9 @@ public class AuthLoginTest {
 
 		MvcResult mvcResult = mockMvc.perform(
 				post("/auth/login")
-					.content(objectMapper.writeValueAsString(user))
+                        .content(objectMapper.writeValueAsString(user))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andDo(print())
 				.andReturn();
 
 		assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);

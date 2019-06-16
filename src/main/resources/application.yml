@@ -11,7 +11,7 @@ spring:
               password:
               driverClassName: org.h2.Driver
 server:
-  context-path: /api
+  context-path: /
 
 jwt:
   header: Authorization

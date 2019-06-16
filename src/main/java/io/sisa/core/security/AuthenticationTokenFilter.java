@@ -2,7 +2,6 @@ package io.sisa.core.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.sisa.core.security.conf.JwtProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +21,14 @@ import java.io.IOException;
 
 public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
-	@Autowired
-	private JwtTokenHelper jwtTokenHelper;
-	@Autowired
-	private UserDetailsService userDetailsService;
+	private final JwtTokenHelper jwtTokenHelper;
+
+	private final UserDetailsService userDetailsService;
+
+	public AuthenticationTokenFilter(JwtTokenHelper jwtTokenHelper, UserDetailsService userDetailsService) {
+		this.jwtTokenHelper = jwtTokenHelper;
+		this.userDetailsService = userDetailsService;
+	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,

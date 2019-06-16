@@ -3,9 +3,10 @@ package io.sisa.core.model.service.impl;
 import io.sisa.core.model.domain.City;
 import io.sisa.core.model.repository.CityRepository;
 import io.sisa.core.model.service.CityService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 /**
@@ -13,22 +14,23 @@ import java.util.List;
  */
 
 @Service
+@AllArgsConstructor
 public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
 
-    @Autowired
-    public CityServiceImpl(CityRepository cityRepository) {
-        this.cityRepository = cityRepository;
-    }
-
     @Override
     public List<City> fetchAllCities() {
-        return (List<City>)cityRepository.findAll();
+        return cityRepository.findAll();
     }
 
     @Override
     public City findById(Long id) {
-        return cityRepository.findOne(id);
+        return cityRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public void save(City city) {
+        cityRepository.save(city);
     }
 }

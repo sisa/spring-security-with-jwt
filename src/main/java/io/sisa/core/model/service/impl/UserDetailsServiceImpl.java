@@ -6,6 +6,8 @@ import io.sisa.core.model.repository.ApplicationUserRepository;
 import io.sisa.core.model.repository.RoleRepository;
 import io.sisa.core.model.repository.UserRoleRepository;
 import io.sisa.core.security.JwtUser;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,21 +25,18 @@ import java.util.List;
  */
 
 @Service
+@Qualifier
+@AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final ApplicationUserRepository applicationUserRepository;
+
     private final UserRoleRepository userRoleRepository;
+
     private final RoleRepository roleRepository;
+
     private final BCryptPasswordEncoder cryptPasswordEncoder;
 
-
-    public UserDetailsServiceImpl(ApplicationUserRepository applicationUserRepository,
-                                  UserRoleRepository userRoleRepository, RoleRepository roleRepository, BCryptPasswordEncoder cryptPasswordEncoder) {
-        this.applicationUserRepository = applicationUserRepository;
-        this.userRoleRepository = userRoleRepository;
-        this.roleRepository = roleRepository;
-        this.cryptPasswordEncoder = cryptPasswordEncoder;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -49,7 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         userRoleRepository.findByUserId(appUser.getId()).forEach(r -> {
-            Role role=roleRepository.findOne(r.getRoleId());
+            Role role = roleRepository.findById(r.getRoleId()).get();
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         });
 

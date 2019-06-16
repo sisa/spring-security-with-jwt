@@ -1,8 +1,9 @@
 package io.sisa.core.security.conf;
 
 import io.sisa.core.security.AuthenticationTokenFilter;
+import io.sisa.core.security.JwtTokenHelper;
 import io.sisa.core.security.RestAuthenticationEntryPoint;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,19 +32,27 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	private final UserDetailsService userDetailsService;
+
 	private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
 	private final BCryptPasswordEncoder cryptPasswordEncoder;
 
-	@Autowired
-	public WebSecurity(UserDetailsService userDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint, BCryptPasswordEncoder cryptPasswordEncoder) {
+	private final JwtTokenHelper jwtTokenHelper;
+
+	public WebSecurity(@Qualifier UserDetailsService userDetailsService,
+					   RestAuthenticationEntryPoint restAuthenticationEntryPoint,
+					   BCryptPasswordEncoder cryptPasswordEncoder,
+					   JwtTokenHelper jwtTokenHelper) {
+
 		this.userDetailsService = userDetailsService;
 		this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
 		this.cryptPasswordEncoder = cryptPasswordEncoder;
+		this.jwtTokenHelper = jwtTokenHelper;
 	}
 
 	@Bean
 	public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-		return new AuthenticationTokenFilter();
+		return new AuthenticationTokenFilter(jwtTokenHelper, userDetailsService);
 	}
 
 	@Override
@@ -54,9 +63,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
 				.and()
 				.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/auth/login").permitAll()
-				.antMatchers("/cities/*").hasRole("ADMIN")
-				.antMatchers("/cities").hasRole("STANDARD")
+				.antMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+				.antMatchers("/api/v1/cities/*").hasRole("ADMIN")
+				.antMatchers("/api/v1/cities").hasRole("STANDARD")
 				.anyRequest().authenticated()
 				.and()
 				.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);

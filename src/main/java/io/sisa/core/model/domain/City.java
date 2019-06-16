@@ -19,5 +19,4 @@ public class City implements java.io.Serializable{
 
     @Column(name = "name")
     private String name;
-
 }

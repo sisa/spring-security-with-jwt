@@ -23,7 +23,6 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author isaozturk
@@ -56,10 +55,9 @@ public class CityControllerTest {
                 post("/auth/login")
                         .content(objectMapper.writeValueAsString(user))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andReturn();
 
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
         token  = mvcResult.getResponse().getContentAsString();
         assertThat(token).isNotEmpty();
 
@@ -74,7 +72,6 @@ public class CityControllerTest {
                 get("/cities")
                         .header("Authorization","Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);

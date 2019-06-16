@@ -6,7 +6,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.sisa.core.security.conf.JwtProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +20,8 @@ import java.util.function.Function;
  * @author isaozturk
  */
 
-@Component
 @Slf4j
+@Component
 public class JwtTokenHelper implements Serializable {
     private static final long serialVersionUID = -3301605591108950415L;
 
@@ -75,6 +74,7 @@ public class JwtTokenHelper implements Serializable {
         return (lastPasswordReset != null && created.before(lastPasswordReset));
     }
 
+    /*
     private String generateAudience(Device device) {
         String audience = AUDIENCE_UNKNOWN;
         if (device.isNormal()) {
@@ -86,18 +86,19 @@ public class JwtTokenHelper implements Serializable {
         }
         return audience;
     }
+    */
 
     private Boolean ignoreTokenExpiration(String token) {
         String audience = getAudienceFromToken(token);
         return (AUDIENCE_TABLET.equals(audience) || AUDIENCE_MOBILE.equals(audience));
     }
 
-    public String generateToken(UserDetails userDetails, Device device) {
+    public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername(), generateAudience(device));
+        return doGenerateToken(claims, userDetails.getUsername());
     }
 
-    private String doGenerateToken(Map<String, Object> claims, String subject, String audience) {
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
         final Date createdDate = new Date();
         final Date expirationDate = calculateExpirationDate(createdDate);
 
@@ -105,7 +106,7 @@ public class JwtTokenHelper implements Serializable {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
-                .setAudience(audience)
+                //.setAudience(audience)
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecret())
